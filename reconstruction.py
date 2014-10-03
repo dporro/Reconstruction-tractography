@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 9 13:56:54 2012
-
 @author: dianaporro
 """
 
