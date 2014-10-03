@@ -105,7 +105,7 @@ if __name__ == '__main__':
     save_filename_trk = dirname + 'tracks_dti_%s.trk' % seed
     save_trk(streamlines, voxel_size, dims, save_filename_trk) 
 
-    save_filename_dpy = dirname + 'tracks_dti_%s.dpy' %s seed
+    save_filename_dpy = dirname + 'tracks_dti_%s.dpy' % seed
     save_dpy(streamlines, save_filename_dpy)
 
     print "Save FA"
