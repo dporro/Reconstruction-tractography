@@ -92,7 +92,7 @@ if __name__ == '__main__':
     bvecs = np.loadtxt(bvec_filename).T
 
     print "Setting parameters"
-    seed = 1e5
+    seed = 100000
     threshold = .1
 
     print "Calling method to reconstruct tractography"
@@ -102,10 +102,10 @@ if __name__ == '__main__':
     voxel_size = img.get_header().get_zooms()[:3]
     dims = FA.shape[:3]
 
-    save_filename_trk = dirname + 'tracks_dti_100K.trk'
+    save_filename_trk = dirname + 'tracks_dti_%s.trk' % seed
     save_trk(streamlines, voxel_size, dims, save_filename_trk) 
 
-    save_filename_dpy = dirname + 'tracks_dti_100K.dpy'
+    save_filename_dpy = dirname + 'tracks_dti_%s.dpy' %s seed
     save_dpy(streamlines, save_filename_dpy)
 
     print "Save FA"
