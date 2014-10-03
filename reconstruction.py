@@ -83,8 +83,7 @@ def save_dpy(streamlines, filename):
 
 if __name__ == '__main__':
 
-    #dirname = '/home/user/HCP/124422/T1w/Diffusion/'
-    dirname = '/home/dporro/data/HCP_all/124422/T1w/Diffusion/'
+    dirname = '/home/user/HCP/124422/T1w/Diffusion/'
     nii_filename = dirname + 'data.nii.gz'
     bval_filename = dirname + 'bvals'
     bvec_filename = dirname + 'bvecs'
@@ -95,8 +94,7 @@ if __name__ == '__main__':
     bvecs = np.loadtxt(bvec_filename).T
 
     print "Setting parameters"
-    #seed = 3*(10**6)
-    seed = 5*(10**5)
+    seed = 3*(10**6)
     threshold = .1
 
     print "Calling method to reconstruct tractography"
