@@ -81,7 +81,7 @@ def save_dpy(streamlines, filename):
 
 if __name__ == '__main__':
 
-    dirname = '/home/user/HCP/124422/T1w/Diffusion/'
+    dirname = 'HCP/124422/T1w/Diffusion/'
     nii_filename = dirname + 'data.nii.gz'
     bval_filename = dirname + 'bvals'
     bvec_filename = dirname + 'bvecs'
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     bvecs = np.loadtxt(bvec_filename).T
 
     print "Setting parameters"
-    seed = 3*(10**6)
+    seed = 1e5
     threshold = .1
 
     print "Calling method to reconstruct tractography"
@@ -102,10 +102,10 @@ if __name__ == '__main__':
     voxel_size = img.get_header().get_zooms()[:3]
     dims = FA.shape[:3]
 
-    save_filename_trk = dirname + 'tracks_dti_3M.trk'
+    save_filename_trk = dirname + 'tracks_dti_100K.trk'
     save_trk(streamlines, voxel_size, dims, save_filename_trk) 
 
-    save_filename_dpy = dirname + 'tracks_dti_3M.dpy'
+    save_filename_dpy = dirname + 'tracks_dti_100K.dpy'
     save_dpy(streamlines, save_filename_dpy)
 
     print "Save FA"
