@@ -102,10 +102,10 @@ if __name__ == '__main__':
     voxel_size = img.get_header().get_zooms()[:3]
     dims = FA.shape[:3]
 
-    save_filename_trk = dirname + 'tracks_dti_500K.trk'
+    save_filename_trk = dirname + 'tracks_dti_3M.trk'
     save_trk(streamlines, voxel_size, dims, save_filename_trk) 
 
-    save_filename_dpy = dirname + 'tracks_dti_500K.dpy'
+    save_filename_dpy = dirname + 'tracks_dti_3M.dpy'
     save_dpy(streamlines, save_filename_dpy)
 
     print "Save FA"
