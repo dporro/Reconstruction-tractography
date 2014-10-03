@@ -15,18 +15,21 @@ from dipy.data import get_sphere
 from dipy.tracking.eudx import EuDX
 
 
-def tractography(nii_filename, bval_filename, bvec_filename, seed, threshold):
-    ''' Script to generate tractography. Uses the EuDX function from dipy. Returns tractography and FA.'''
+def tractography_rec(imag, bvals, bvecs, seed, threshold):
+    ''' Script to generate tractography. Uses the EuDX function from dipy. Returns tractography and FA.
     
-    print "Loading data"
-    img = nib.load(nii_filename)
+    Parameters
+    ----------
+    imag: NiftiImage object 
+    bvals: bvals array
+    bvecs: bvecs array
+    seed: int or ndarray (Parameter for the EuDX function)
+    threshold : float (Parameter for the EuDX function)
+    '''
+
+    print "Retrieving data and affine"
     data = img.get_data()
     affine = img.get_affine()
-    
-
-    bvals = np.loadtxt(bval_filename)
-    bvecs = np.loadtxt(bvec_filename).T # this is the unitary direction of the gradient
-
 
     #new version of dipy
     print "Computing tensor model"
@@ -51,6 +54,7 @@ def tractography(nii_filename, bval_filename, bvec_filename, seed, threshold):
 			seeds=seed,
                         odf_vertices= sphere.vertices,
                         a_low=threshold)
+
     return streamlines, FA
 
 
@@ -61,11 +65,53 @@ def save_trk(streamlines, voxel_size, dimensions, filename):
     hdr = nib.trackvis.empty_header()
     hdr['voxel_size'] = voxel_size
     hdr['voxel_order'] = 'LAS'
-    hdr['dim'] = dim
+    hdr['dim'] = dimensions
     strm = ((sl, None, None) for sl in streamlines)
 
     nib.trackvis.write(filename, strm, hdr, points_space='voxel')
-    
+
+def save_dpy(streamlines, filename):
+    ''' Save tractography to a .dpy file'''
+
+    print "Save tracks as .dpy"	
+    tracks = [track for track in streamlines]
+    dpw = Dpy(filename, 'w')
+    dpw.write_tracks(tracks)
+    dpw.close()
 
 
 
+if __name__ == '__main__':
+
+    #dirname = '/home/user/HCP/124422/T1w/Diffusion/'
+    dirname = '/home/dporro/data/HCP_all/124422/T1w/Diffusion/'
+    nii_filename = dirname + 'data.nii.gz'
+    bval_filename = dirname + 'bvals'
+    bvec_filename = dirname + 'bvecs'
+
+    print "Loading data"
+    img = nib.load(nii_filename)
+    bvals = np.loadtxt(bval_filename)
+    bvecs = np.loadtxt(bvec_filename).T
+
+    print "Setting parameters"
+    #seed = 3*(10**6)
+    seed = 5*(10**5)
+    threshold = .1
+
+    print "Calling method to reconstruct tractography"
+    streamlines, FA = tractography_rec(img, bvals, bvecs, seed, threshold)
+
+    print "Saving data"
+    voxel_size = img.get_header().get_zooms()[:3]
+    dims = FA.shape[:3]
+
+    save_filename_trk = dirname + 'tracks_dti_500K.trk'
+    save_trk(streamlines, voxel_size, dims, save_filename_trk) 
+
+    save_filename_dpy = dirname + 'tracks_dti_500K.dpy'
+    save_dpy(streamlines, save_filename_dpy)
+
+    print "Save FA"
+    mapfile = dirname+'DTI/FA_map.nii.gz'
+    nib.save(nib.Nifti1Image(FA, img.get_affine()), mapfile)
